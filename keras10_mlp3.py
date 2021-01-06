@@ -1,5 +1,18 @@
-#다:다 mlp
+#keras10_mlp3.py 실습
+#다:다 mlp(다대다 다층퍼셉트론)
+#변경된 사항:#1.데이터 구성에서 y의 열 2개추가
+#중요사항: #2.모델구성에서 마지막 레이어(아웃풋층레이어)에서 노드가 3개★(새로 생성된 y열의 수)
+#                         =>model.add(Dense(3)) #★(100,3)이므로 나가는 칼럼은 3개
 
+'''
+x_test,y_test에 대한 로스외의 값
+loss: 1.5448075041391007e-09
+mae: 2.9313809136510827e-05
+RMSE: 3.9304039803145916e-05
+R2: 0.9999999999980455
+'''
+
+#1.데이터구성
 import numpy as np
 
 x=np.array([range(100),range(301,401),range(1,101)])
@@ -29,7 +42,7 @@ model=Sequential()
 model.add(Dense(10,input_dim=3)) #칼럼의 갯수 3
 model.add(Dense(5))
 model.add(Dense(5))
-model.add(Dense(3)) #(100,3)이므로 나가는 칼럼은 3개
+model.add(Dense(3)) #★(100,3)이므로 나가는 칼럼은 3개
 
 #3.컴파일,훈련
 model.compile(loss='mse',optimizer='adam',metrics=['mae'])
@@ -42,9 +55,6 @@ print('mae:',mae)
 
 y_predict=model.predict(x_test)
 #print(y_predict)
-
-loss: 0.01810389757156372
-mae: 0.1155942901968956
 
 from sklearn.metrics import mean_squared_error
 def RMSE(y_test,y_predict):

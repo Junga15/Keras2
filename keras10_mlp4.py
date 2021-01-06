@@ -1,11 +1,23 @@
-#실습1
-#x는 (100,5) 데이터 구성
-#y는 (100,2) 데이터 구성
-#모델을 완성하시오
+#keras10_mlp4.py 실습
+#다:다 mlp(다대다 다층퍼셉트론)
+#실습1:x는(100,5),y는(100,2) 데이터 구성하여 모델을 완성하기.
+#실습2:predict의 일부값을 출력하기. =>y_pred2★값 구하기
+#변경추가사항: #1.데이터 구성부분 트랜스포스함수 대신 reshape함수 적용
+               #4.평가,예측부분 상세한 주석(설명): y_pred2 예측하기 + y_predict값을 통해 RMSE,R2 구하는 목적 외
+#변경한 것(하이퍼 파라미터 튜닝): 에퐄을 500을 줌
 
-#실습2
-#다 만든 친구들은 predict의 일부값을 출력하시오. => pred2
+'''
+x_test,y_test에 대한 로스외의 값
+loss: 1.9191762845593985e-08
+mae: 0.00012081116437911987
+RMSE: 0.0001385343333377194
+R2: 0.9999999999757168
 
+y_pred2값 
+[[812.49646 101.27561]]
+'''
+
+#1.데이터 구성
 import numpy as np
 
 x=np.array([range(100),range(301,401),range(1,101),range(100),range(301,401)])
@@ -14,20 +26,17 @@ print(x.shape) #(5,100)
 print(y.shape) #(2,100)
 
 x_pred2=np.array([100,402,101,100,401]) #shape (5,) 따라서 다음작업
-#y_pred2는 811,101 나올 것이라 유추가능 (2,) [[811,101]]=>(1,2)로 나옴
-print("x_pred2.shape:",x_pred2.shape) #transpose출력 전 #(5,)=>스칼라가 5개인 1차원=[1,2,3,4,5]
-
+#y_pred2는 811,101 나올 것이라 유추가능 (2,) [[811,101]]=>(1,2)로 나옴 
+print("x_pred2.shape:",x_pred2.shape) #(5,)=>스칼라가 5개인 1차원=[1,2,3,4,5] (transpose출력 전) 
+                                      #(5,)=(1,5)
 x=np.transpose(x)
 y=np.transpose(y) 
-#x_pred2=np.transpose(x_pred2) #출력 후 값이 (5,)이므로 아래실행
-x_pred2=x_pred2.reshape(1,5)
-
+#x_pred2=np.transpose(x_pred2) #출력 후 값이 (5,)
+x_pred2=x_pred2.reshape(1,5)  #위의 트랜스포스함수와 동일
 print(x.shape) #(100,5)
 print(y.shape) #(100,2)
 print(x_pred2.shape)
-print("x_pred2.shape:",x_pred2.shape) #transpose출력 후 #(5,) -> #(1,5)=>행무시 input_dim=5인 [[1,2,3,4,5]]
-
-
+print("x_pred2.shape:",x_pred2.shape) #(5,) -> #(1,5)=>행무시 input_dim=5인 [[1,2,3,4,5]] (transpose출력 후)
 
 from sklearn.model_selection import train_test_split
 
@@ -49,25 +58,21 @@ model.add(Dense(5))
 model.add(Dense(2)) #(100,2)이므로 나가는 y의 피쳐,칼럼,특성은 2개
 
 #3.컴파일,훈련
-#다:다 mlp
-
 model.compile(loss='mse',optimizer='adam',metrics=['mae'])
 model.fit(x_train,y_train,epochs=500,batch_size=1,validation_split=0.2) #각 칼럼별로 20%, x중 1,2 and 11,12
                                                   #val_x, val_y
                                                   #print(v)
  #4.평가,예측
-loss,mae=model.evaluate(x_test,y_test) #(5.2)
-print('loss:',loss)
+loss,mae=model.evaluate(x_test,y_test) 
+print('loss:',loss) #loss가 하나가 나오는 이유는 최종것임
 print('mae:',mae)
 
-
+#.y예측값을 통한 RMSE와 R2 구하기
 y_predict=model.predict(x_test) #y_test와 유사한 값=y_predict
 print(y_predict)
-#이를 통해서 RMSE와 R2를 구해서 이 모델이 잘 만들었나 못만들었나 확인
-'''
-loss: 0.01810389757156372
-mae: 0.1155942901968956
-'''
+#y예측값을 구하는 목적은 y예측값을 통해 RMSE와 R2를 구해서 
+#로스,mae와 함께 이 모델이 잘 만들었나 못만들었나 확인하는 지표로 사용하기 위함.(RMSE와 R2:모델평가지표)
+
 from sklearn.metrics import mean_squared_error
 def RMSE(y_test,y_predict):
     return np.sqrt(mean_squared_error(y_test,y_predict))
@@ -80,8 +85,7 @@ r2=r2_score(y_test,y_predict)
 print("R2:",r2)
 
 y_pred2=model.predict(x_pred2) 
-print(y_pred2)  #(1,2)인 [[238.99931 113.22224]] 가중치가 준비되어 있기 때문에 pred2,3,4...할 수 있다.
-                        # [[445.96103    -3.6515467]] 
-                #xdata가 달랐음 xdata를 고치니 아랫값
-                #[[811.2032  101.46421]]
-#loss가 하나가 나오는 이유는 최종것임
+print(y_pred2)  
+#(1,2)인 [[238.99931 113.22224]] 가중치가 준비되어 있기 때문에 pred2,3,4...할 수 있다.
+#[[445.96103    -3.6515467]] :잘못된 예측값,xdata가 달랐음
+#[[811.2032  101.46421]]: 올바른 예측값(xdata수정후)

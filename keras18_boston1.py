@@ -1,7 +1,8 @@
+#.keras18_boston1.py 실습
 # 보스턴 집값 ()
 # 머신러닝이므로 사이킷런에서 많이 제공하고 텐서플로,케라스에서도 제공
 # 집값이 정해져 있지 않으므로 y값을 찾는 회귀모델
-#14개의열을 제공할테니 집값을 맞춰라.(옛날집값이라 싸다.)
+# 14개의 열을 제공할테니 집값을 맞춰라.(옛날집값이라 싸다.)
 #keras09_mlp1 모델과 동일
 #train_test split를 통해 x와 y를 분리한 뒤
 
@@ -15,7 +16,7 @@ R2: 0.5568457825690605
 MinMax이용 전처리후
 
 '''
-
+#1.데이터 구성
 import numpy as np 
 
 from sklearn.datasets import load_boston
@@ -23,7 +24,7 @@ from sklearn.datasets import load_boston
 dataset=load_boston()
 x=dataset.data
 y=dataset.target
-'''
+
 print("========================")
 print(x[:5]) #인덱스가 0~4, 교육용데이터라 전처리가 되어있는 상태임
 print(y[:10]) #[24.  21.6 34.7 33.4 36.2 28.7 22.9 27.1 16.5 18.9]
@@ -32,8 +33,8 @@ print(np.max(x),np.min(x)) #최대값과 최소값 구하는법
                            #최대값 711, 최소값0
 print(dataset.feature_names) #컬럼명
 print(dataset.DESCR)
-'''
 
+'''
 print(x.shape) #(506,13) input_shape 13
 print(y.shape) #(506,)  output input_dim 1
 #mlp keras09_mlp1과 동일
@@ -84,3 +85,4 @@ from sklearn.metrics import r2_score
 r2=r2_score(y_test,y_predict)
 print("R2:",r2)
 
+'''

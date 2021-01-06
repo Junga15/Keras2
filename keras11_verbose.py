@@ -1,13 +1,35 @@
-#validation default는 0(none) => 디폴트값이 있었다면 val_data,split안넣어도 발로스,발mae가 그냥 나와야함
+#keras11_verbose.py 실습
 
 '''
-verbose 디폴트값이 있는지 알려면 안넣고 해보면됨, 해봤을 때 다 나왔으므로 디폴트값이 있다는 것
-verbose=0 => 과정부터 모두 아무것도 안나옴
-verbose=1 => 다나옴, 로스,메트릭스(mae),발로스,발매 출력 
-verbose=2 => 다나옴, 로스,메트릭스(mae),발로스,발매 출력
-verbose=3 => 과정은 나오나 위의 지표 아무것도 안나옴
-=>verbose는 fit에서 가장 많이 나옴
+<verbose 요약>
+verbose는 #3.컴파일,훈련부분인 fit에서 수행
+verbose의 디폴트값은 1
+(verbose 디폴트값이 있는지 알려면 안넣고 해보면됨, 해봤을 때 다 나왔으므로 디폴트값이 1임을 알수있음)
 
+1.verbose=0 
+훈련과정이 안나옴,보여주지 않고 훈련이 빨라짐, epoch이 클때 수행
+ex>1/1 [==============================] - 0s 0s/step - loss: 1.6837e-09 - mae: 3.3239e-05 나오고 바로
+loss: 1.6836996241664792e-09
+mae: 3.3238531614188105e-0 값나옴
+
+2.verbose=1 (디폴트값)
+모두 나옴, Epoch마다 로스loss,메트릭스지표(mae),발로스val_loss,발매val_mae가 프로그레스바[==========]에 모두 출력 
+epoch이 작을때 지표 보면서 수행
+ex>Epoch 3/100
+64/64 [==============================] - 0s 1ms/step - loss: 1098.0681 - mae: 27.8623 - val_loss: 840.4240 - val_mae: 25.6387
+
+3.verbose=2
+지표(로스,메트릭스(mae),발로스,발매)는 모두 나오나 프로그레스바[==========]가 지워짐
+ex>Epoch 3/100
+64/64 - 0s - loss: 3283.5754 - mae: 41.7829 - val_loss: 2716.4902 - val_mae: 36.5954
+
+4.verbose=3 
+Epoch만 나옴, 지표 loss,mae,val_loss,val_mae,프로그레스바[==========]모두 미출력
+ex>Epoch 3/100
+Epoch 4/100
+Epoch 5/100
+
+※validation default는 0(none) => 디폴트값이 있었다면 val_data,split안넣어도 발로스,발mae가 그냥 나와야함
 '''
 
 import numpy as np
@@ -30,7 +52,6 @@ print(y.shape) #(100,2)
 print(x_pred2.shape)
 print("x_pred2.shape:",x_pred2.shape) #transpose출력 후 #(5,): 스칼라([칼럼,피쳐,열,특성]가 5개 -> #(1,5)=>행무시 input_dim=5인 [[1,2,3,4,5]]
 
-
 from sklearn.model_selection import train_test_split
 
 x_train,x_test,y_train,y_test = train_test_split(x,y,shuffle=True,test_size=0.2,random_state=66) #행을 자르는 것
@@ -52,25 +73,16 @@ model.add(Dense(2)) #(100,2)이므로 나가는 y의 피쳐,칼럼,특성은 2�
 
 #3.컴파일,훈련
 model.compile(loss='mse',optimizer='adam',metrics=['mae'])
-model.fit(x_train,y_train,epochs=500,batch_size=1,validation_split=0.2,verbose=0) #각 칼럼별로 20%, x중 1,2 and 11,12
-                                                  #verbose가 0일때 훈련은 빨라지나 과정이 안보임
-                                                  #시간이 얼마 안걸릴때 epoch가 작을 때 과정을 보면서 할 때(아래)
-                                                  # 벌보스 1 
-
-                                                  
+model.fit(x_train,y_train,epochs=100,batch_size=1,validation_split=0.2,verbose=0) 
+                                        
  #4.평가,예측
-loss,mae=model.evaluate(x_test,y_test) #(5.2)
+loss,mae=model.evaluate(x_test,y_test) 
 print('loss:',loss)
 print('mae:',mae)
 
-
 y_predict=model.predict(x_test) #y_test와 유사한 값=y_predict
 print(y_predict)
-#이를 통해서 RMSE와 R2를 구해서 이 모델이 잘 만들었나 못만들었나 확인
-'''
-loss: 0.01810389757156372
-mae: 0.1155942901968956
-'''
+
 from sklearn.metrics import mean_squared_error
 def RMSE(y_test,y_predict):
     return np.sqrt(mean_squared_error(y_test,y_predict))

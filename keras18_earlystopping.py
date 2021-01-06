@@ -1,7 +1,3 @@
-#제대로 전처리(validation_split): 기준을 x_train만 잡고 전처리 진행 
-#x_train은 fit,transform, x_val,x_test,x_predict는 transform만 진행
-
-
 import numpy as np 
 
 from sklearn.datasets import load_boston
@@ -61,8 +57,14 @@ model.add(Dense(1))
 
 #컴파일, 훈련
 model.compile(loss='mse',optimizer='adam',metrics=['mae'])
-model.fit(x_train,y_train,epochs=100,batch_size=8,validation_split=0.2) #validation split은 각 칼럼별로 20%, 위의 예시에서는 x는 1,2와 11,12, y는 1,2
-#배치 사이즈가 8이면 1에포크 할 때마다 64번 훈련시킴 총 506이므로
+
+from tensorflow.keras.callbacks import EarlyStopping #callbacks 호출하다
+early_stopping=EarlyStopping(monitor='loss',patience=20,mode='min') #patience:나의 인내심은 20번(5,10,20번)을 못참는다.로스값이 최소값이 떨어지지 않는 행위를 10번 참겠다.
+                                                                    #페이션스가 커질수록 에폭이 많이돔
+                                                                    #mode는 min,max,auto
+
+model.fit(x_train,y_train,epochs=2000,batch_size=8,callbacks=[early_stopping],validation_split=0.2) #얼리스탑팅,페이션스를 넣어줬기 때문에 에폭을 2천번 넣어줘도 중간에 끝남
+                                                                                            
 
  #4.평가,예측
 loss,mae=model.evaluate(x_test,y_test,batch_size=8) #loss,mae는 a,b로 바뀌어도 상관없음
