@@ -1,3 +1,5 @@
+#keras23_LSTM2.py 실습
+
 #input_shape / input_length / input_dim
 #이페이지 바꾼 건 model.add(LSTM(10,activation='relu',input_length=3,input_dim=1)) #위의 것 이렇게 실행가능, 인풋딤은 피쳐, 인풋렝스는 타임스텝스
 #이거밖에 없음

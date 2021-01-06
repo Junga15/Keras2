@@ -1,21 +1,47 @@
-#1:다 mlp
-#실습:코드를 완성할 것
-#mlp4처럼 predict값을 도출할 것
+#keras10_mlp6.py 실습
+#1:다 mlp(일대다 다층퍼셉트론)
+#과제:코드를 완성하고 mlp4처럼 predict값을 도출할 것(x_pred2값은 주어진 것)
+#변경추가사항:#1.데이터 구성에서 x열이 1개로 구성
+
+'''
+x_test,y_test에 대한 로스외의 값
+
+1차시
+loss: 0.01810389757156372
+mae: 0.1155942901968956
+
+2차시
+loss: 21.169872283935547
+mae: 3.3767330646514893
+RMSE: 4.601072881976383
+R2: 0.9732137985009272
+
+y_pred2값_1차시  ※조건:x_pred2=np.array([0,1,99])
+[[6.5694263e+02 6.1323208e-01 1.8710392e+01]
+ [6.5870685e+02 1.6224852e+00 1.9360758e+01]
+ [8.3161115e+02 1.0052752e+02 8.3096146e+01]]
+
+y_pred2값_2차시 =>맞을까?
+[[706.5739     -2.7409987  12.132596 ]
+ [707.64935    -1.6612267  12.877538 ]
+ [813.03485   104.157936   85.88353  ]]
+
+'''
 
 import numpy as np
 
 x=np.array(range(100))
 y=np.array([range(711,811),range(1,101),range(100)])
-print(x.shape) #(3,100)
+print(x.shape) #(1,100)=(100,)
 print(y.shape) #(3,100)
 
 x=np.transpose(x)
 y=np.transpose(y) #(100,3)
-print(x)
-print(x.shape) #=>(100,3)
+print(x) #[0,1,...,98,99]
+print(x.shape) #=>(100,1)=(100,)
 
 x_pred2=np.array([0,1,99])
-print("x_pred2.shape:",x_pred2.shape) #(20,3)
+print("x_pred2.shape:",x_pred2.shape) #(3,)
 
 from sklearn.model_selection import train_test_split
 
@@ -48,9 +74,6 @@ print('mae:',mae)
 y_predict=model.predict(x_test)
 #print(y_predict)
 
-loss: 0.01810389757156372
-mae: 0.1155942901968956
-
 from sklearn.metrics import mean_squared_error
 def RMSE(y_test,y_predict):
     return np.sqrt(mean_squared_error(y_test,y_predict))
@@ -64,8 +87,4 @@ print("R2:",r2)
 
 y_pred2=model.predict(x_pred2)
 print(y_pred2)
-'''
-#[[ 6.9808752e+02  3.0145443e+01 -4.9315697e-01]
- [ 6.9928442e+02  3.0585827e+01  5.1326168e-01]
- [ 8.1657959e+02  7.3743965e+01  9.9144989e+01]]
- '''
+

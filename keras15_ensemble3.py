@@ -35,7 +35,7 @@ from tensorflow.keras.layers import Dense,Input,concatenate,Concatenate
 input1=Input(shape=(3,)) #input layer 구성
 dense1=Dense(10,activation='relu')(input1)
 dense1=Dense(5, activation='relu')(dense1)
-#output1=Dense(3)(dense1)
+output1=Dense(3)(dense1)
 
 #모델2
 input2=Input(shape=(3,)) 
@@ -43,7 +43,7 @@ dense2=Dense(10,activation='relu')(input2)
 dense2=Dense(5, activation='relu')(dense2)
 dense2=Dense(5, activation='relu')(dense2)
 dense2=Dense(5, activation='relu')(dense2)
-#output2=Dense(3)(dense2)
+output2=Dense(3)(dense2)
 
 #모델병합 / concatenate: 사슬같이 잇다
 merge1=concatenate([dense1,dense2]) 

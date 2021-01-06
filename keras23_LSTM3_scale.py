@@ -1,3 +1,4 @@
+#keras23_LSTM3.py 실습
 #실습.LSTM 코딩하기,나는 80을 원하오.=>LSTM 1을 적용한 실습
 
 import numpy as np

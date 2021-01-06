@@ -1,13 +1,10 @@
-#validation default는 0(none) => 디폴트값이 있었다면 val_data,split안넣어도 발로스,발mae가 그냥 나와야함
+#keras12_input_shape.py
+#추가된 사항 1가지: #2.모델 구성에서 인풋쉐이프만 추가됨
 
 '''
-verbose 디폴트값이 있는지 알려면 안넣고 해보면됨, 그랬을 때 다 나왔으므로 디폴트값이 있다는 것
-verbose=0 => 과정부터 모두 아무것도 안나옴
-verbose=1 => 다나옴, 로스,메트릭스(mae),발로스,발매 출력 
-verbose=2 => 다나옴, 로스,메트릭스(mae),발로스,발매 출력
-verbose=3 => 과정은 나오나 위의 지표 아무것도 안나옴
-=>verbose는 fit에서 가장 많이 나옴
-
+추가된 사항 #2.모델구성
+# model.add(Dense(10,input_dim=5)) #(100,5) 이므로 칼럼의 갯수인 dim=5
+# model.add(Dense(10,input_shape=(5,))) 
 '''
 
 import numpy as np
@@ -30,7 +27,6 @@ print(y.shape) #(100,2)
 print(x_pred2.shape)
 print("x_pred2.shape:",x_pred2.shape) #transpose출력 후 #(5,) -> #(1,5)=>행무시 input_dim=5인 [[1,2,3,4,5]]
 
-
 from sklearn.model_selection import train_test_split
 
 x_train,x_test,y_train,y_test = train_test_split(x,y,shuffle=True,test_size=0.2,random_state=66) #행을 자르는 것
@@ -46,21 +42,17 @@ from tensorflow.keras.layers import Dense
 
 model=Sequential()
 # model.add(Dense(10,input_dim=5)) #(100,5) 이므로 칼럼의 갯수인 dim=5
-model.add(Dense(10,input_shape=(5,))) #
+model.add(Dense(10,input_shape=(5,))) 
 model.add(Dense(5))
 model.add(Dense(5))
 model.add(Dense(2)) #(100,2)이므로 나가는 y의 피쳐,칼럼,특성은 2개
 
 #3.컴파일,훈련
 model.compile(loss='mse',optimizer='adam',metrics=['mae'])
-model.fit(x_train,y_train,epochs=500,batch_size=1,validation_split=0.2,verbose=0) #각 칼럼별로 20%, x중 1,2 and 11,12
-                                                  #verbose가 0일때 훈련은 빨라지나 과정이 안보임
-                                                  #시간이 얼마 안걸릴때 epoch가 작을 때 과정을 보면서 할 때(아래)
-                                                  # 벌보스 1 
-
+model.fit(x_train,y_train,epochs=500,batch_size=1,validation_split=0.2,verbose=0) 
                                                   
  #4.평가,예측
-loss,mae=model.evaluate(x_test,y_test) #(5.2)
+loss,mae=model.evaluate(x_test,y_test)
 print('loss:',loss)
 print('mae:',mae)
 

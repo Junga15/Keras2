@@ -24,6 +24,7 @@ print("x.shape:",x.shape) #(13,3)
 print("y.shape:",y.shape) #(3,)
 x_pred=np.array([50,60,70]) #(3,) =>1행
 
+
 #2.모델구성 =>함수형 모델로 만들기(keras13_hamsu1에서 끌어옴)
 
 #2.1 함수형 모델
