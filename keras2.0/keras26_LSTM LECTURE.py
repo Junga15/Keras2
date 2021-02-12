@@ -1,0 +1,4 @@
+AUDIO_FILE_ENCODING_LINEAR_16
+
+
+1.리턴시퀀스
